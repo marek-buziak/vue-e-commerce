@@ -1,0 +1,21 @@
+<script setup lang="ts">
+    import { ref } from "vue";
+    const count = ref(0);
+
+    function counterAction(event: any) {
+        console.log(event.target.dataset.action);
+    }
+</script>
+
+<template>
+  <section class="container mx-auto">
+    <div class="counter-wrapper flex justify-center">
+        <button @click="counterAction" data-action="subtract">➖</button>
+        <p class="counter-view"></p>
+        <button @click="counterAction" data-action="addition">➕</button>
+    </div>
+  </section>
+</template>
+
+<style scoped>
+</style>
