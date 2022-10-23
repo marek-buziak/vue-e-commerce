@@ -17,7 +17,7 @@ defineExpose({
 			<ul>
 				<li><RouterLink to="/">Home</RouterLink></li>
 				<li><RouterLink to="/about">About</RouterLink></li>
-				<li>Shop</li>
+				<li><RouterLink to="/products">Products</RouterLink></li>
 				<li>Contact</li>
 				<li>Cart - icon placeholder</li>
 			</ul>

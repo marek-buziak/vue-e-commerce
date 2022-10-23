@@ -6,19 +6,16 @@ import Footer from "@/components/Footer.vue";
 
 const navbar = ref(null);
 const h1 = ref(null)
-console.log("navbar initially:", navbar.value);
 onMounted(() => {
-    console.log("navbar onMounted:", navbar.value);
-    console.log("h1 onMounted:", h1.value);
+    console.log("App.vue onMounted");
 })
 
 </script>
 
 <template>
-    <Navbar ref="navbar"/>
+    <Navbar />
     <RouterView />
     <Footer />
-    <h1 ref="h1">Vue App</h1>
   <!-- <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
