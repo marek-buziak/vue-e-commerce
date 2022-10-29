@@ -4,6 +4,9 @@ module.exports = {
 	darkMode: 'media',
 	theme: {
 		extend: {},
+        fontFamily: {
+            "rubik": ["Rubik", "sans-serif"],
+          }
 	},
 	plugins: [],
 };
