@@ -1,6 +1,10 @@
 {
   "name": "e-commerce-vue",
   "version": "0.0.0",
+  "engines": {
+    "node": "18.10.0",
+    "npm": "8.19.2"
+  },
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
