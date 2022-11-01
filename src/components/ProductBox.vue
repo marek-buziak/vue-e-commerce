@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { useProductsStore } from "@/stores/ProductsStore";
 const props = defineProps({
 	id: Number,
 	title: String,
@@ -8,6 +10,18 @@ const props = defineProps({
 	description: String,
 	rating: Object,
 });
+
+const productsStore = useProductsStore();
+
+// const getProductsData: any = computed(() => {
+// 	return productsStore.getProductsData;
+// });
+
+const getProducts = (event: any) => {
+    console.log("event.target:", event.target);
+    console.log("products from store:", productsStore.getProductsData);
+}
+
 </script>
 
 <template>
@@ -21,30 +35,37 @@ const props = defineProps({
 				:alt="props.title"
 			/>
 		</div>
-		<div class="product-category absolute -top-[16px] left-1/2 -translate-x-1/2 rounded-md">
-            <p class="text-slate-400 text-xs">{{ props.category }}</p>
-        </div>
-		<div class="product-title w-full mb-1">
-            <p class="text-center truncate w-full font-semibold	text-lg">{{ props.title }}</p>
-        </div>
-		<div class="product-description w-full mb-4">
-			<p class="text-center truncate w-full font-light text-sm">{{ props.description }}</p>
+		<div
+			class="product-category absolute -top-[16px] left-1/2 -translate-x-1/2 rounded-md"
+		>
+			<p class="text-slate-400 text-xs">{{ props.category }}</p>
 		</div>
-        <div class="product-price flex items-center mb-4">
-                <div class="text-2xl flex items-center mr-1">
-                    <font-awesome-icon icon="fa-solid fa-dollar-sign" />
-                </div>
-                <p class="text-center text-4xl font-light">{{ props.price }}</p>
-            </div>
+		<div class="product-title w-full mb-1">
+			<p class="text-center truncate w-full font-semibold text-lg">
+				{{ props.title }}
+			</p>
+		</div>
+		<div class="product-description w-full mb-4">
+			<p class="text-center truncate w-full font-light text-sm">
+				{{ props.description }}
+			</p>
+		</div>
+		<div class="product-price flex items-center mb-4">
+			<div class="text-2xl flex items-center mr-1">
+				<font-awesome-icon icon="fa-solid fa-dollar-sign" />
+			</div>
+			<p class="text-center text-4xl font-light">{{ props.price }}</p>
+		</div>
 		<div class="actions">
 			<div class="add-to-cart">
-				<button class="flex items-center text-2xl p-2 bg-white hover:bg-slate-200 active:bg-slate-400 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500">
-                    <font-awesome-icon icon="fa-solid fa-cart-plus" />
-                    <span class="text-sm ml-2">Add to cart</span>
-                </button>
+				<button
+					class="flex items-center text-2xl p-2 bg-white hover:bg-slate-200 active:bg-slate-400 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+				@click="getProducts">
+					<font-awesome-icon icon="fa-solid fa-cart-plus" />
+					<span class="text-sm ml-2">Add to cart</span>
+				</button>
 			</div>
 		</div>
 	</div>
 </template>
-<style>
-</style>
+<style></style>

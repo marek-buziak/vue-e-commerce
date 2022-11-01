@@ -1,36 +1,35 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import axios from "axios";
+import { ref, onMounted, onErrorCaptured, computed } from "vue";
+import { useProductsStore } from "@/stores/ProductsStore";
 import ProductBox from "@/components/ProductBox.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
-let productsData = ref<any[]>([]);
-console.log("productsData - initial:", productsData.value);
+const productsStore = useProductsStore();
 
-const getProductsData = async () => {
-    console.log("getProductsData");
-	try {
-		const response = await axios.get("https://fakestoreapi.com/products");
-		console.log("response:", response);
-        productsData.value = response.data;
-        console.log("productsData - updated:", productsData.value);
-	} catch (error) {
-		console.error(error);
-	}
-};
+const error = ref<any>(null);
+onErrorCaptured(e => {
+  error.value = e;
+  return false;
+})
 
 onMounted(() => {
-    getProductsData();
-})
+    productsStore.fetchProductsData();
+});
+
+const getProductsData: any = computed(() => {
+    return productsStore.getProductsData;
+});
+
 </script>
 
 <template>
 	<h1>ProductList component</h1>
-    <section class="products md:container mx-auto px-2 sm:px-4 flex flex-wrap gap-y-16 sm:gap-x-8 lg:gap-x-6" v-if="productsData.length">
-        <ProductBox class="product-box" v-for="product in productsData" :key="product.id" v-bind="product"/>
+    <section class="products md:container mx-auto px-2 sm:px-4 flex flex-wrap gap-y-16 sm:gap-x-8 lg:gap-x-6" v-if=" getProductsData">
+        <ProductBox class="product-box" v-for="product in getProductsData" :key="product.id" v-bind="product"/>
     </section>
     <LoadingSpinner v-else/>
 </template>
+
 <style>
 
     .product-box {
