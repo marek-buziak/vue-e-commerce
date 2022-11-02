@@ -2,5 +2,7 @@
 </script>
 
 <template>
-    <h1>ABOUT page</h1>
+    <div class="about">
+        <h1>ABOUT page</h1>
+    </div>
 </template>

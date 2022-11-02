@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { useProductsStore } from "@/stores/ProductsStore";
+import { useCartStore } from "@/stores/CartStore";
 const props = defineProps({
 	id: Number,
 	title: String,
@@ -11,16 +10,7 @@ const props = defineProps({
 	rating: Object,
 });
 
-const productsStore = useProductsStore();
-
-// const getProductsData: any = computed(() => {
-// 	return productsStore.getProductsData;
-// });
-
-const getProducts = (event: any) => {
-    console.log("event.target:", event.target);
-    console.log("products from store:", productsStore.getProductsData);
-}
+const cartStore = useCartStore();
 
 </script>
 
@@ -59,9 +49,11 @@ const getProducts = (event: any) => {
 		<div class="actions">
 			<div class="add-to-cart">
 				<button
-					class="flex items-center text-2xl p-2 bg-white hover:bg-slate-200 active:bg-slate-400 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-				@click="getProducts">
-					<font-awesome-icon icon="fa-solid fa-cart-plus" />
+					class="flex items-center p-2 bg-white hover:bg-slate-200 active:bg-slate-400 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+                    :data-product-id="props.id"
+				    @click="cartStore.addToCart"
+                >
+					<font-awesome-icon class="text-2xl" icon="fa-solid fa-cart-plus" />
 					<span class="text-sm ml-2">Add to cart</span>
 				</button>
 			</div>

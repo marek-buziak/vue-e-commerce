@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <div class="home">
-        <h1>HOME page</h1>
+    <div class="contact">
+        <h1>CONTACT page</h1>
     </div>
 </template>

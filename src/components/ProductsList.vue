@@ -23,10 +23,9 @@ const getProductsData: any = computed(() => {
 </script>
 
 <template>
-	<h1>ProductList component</h1>
-    <section class="products md:container mx-auto px-2 sm:px-4 flex flex-wrap gap-y-16 sm:gap-x-8 lg:gap-x-6" v-if=" getProductsData">
+    <div class="products sm:container mx-auto mt-8 sm:mt-6 flex flex-wrap gap-y-16 sm:gap-x-8 lg:gap-x-6" v-if=" getProductsData">
         <ProductBox class="product-box" v-for="product in getProductsData" :key="product.id" v-bind="product"/>
-    </section>
+    </div>
     <LoadingSpinner v-else/>
 </template>
 
