@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { useCartStore } from "@/stores/CartStore";
 const props = defineProps({
 	id: Number,
@@ -10,13 +11,34 @@ const props = defineProps({
 	rating: Object,
 });
 
+interface ArithmeticOperation {
+    add: string;
+    subtract: string;
+}
+
+const ARITHMETIC_OPERATION: ArithmeticOperation = {
+    add: "add",
+    subtract: "subtract"
+}
+
+const prodQuantity = ref<number>(1);
 const cartStore = useCartStore();
+
+const changeProdQuantity = (event: any) => {
+    if (event.currentTarget.dataset.action === ARITHMETIC_OPERATION.add) {
+        return prodQuantity.value++;
+    }
+    
+    if (event.currentTarget.dataset.action === ARITHMETIC_OPERATION.subtract && prodQuantity.value) {
+        return prodQuantity.value--;
+    }
+}
 
 </script>
 
 <template>
 	<div
-		class="flex flex-col items-center bg-white p-4 rounded-3xl relative before:absolute before:content-[''] before:w-1/2 before:h-10 before:bg-white before:-top-5 before:left-1/2 before:rounded-[50%] before:-translate-x-1/2"
+		class="flex flex-col items-center bg-white p-4 pb-6 rounded-3xl relative before:absolute before:content-[''] before:w-1/2 before:h-10 before:bg-white before:-top-5 before:left-1/2 before:rounded-[50%] before:-translate-x-1/2"
 	>
 		<div class="product-image flex justify-center h-56 w-56 mb-4">
 			<img
@@ -46,10 +68,19 @@ const cartStore = useCartStore();
 			</div>
 			<p class="text-center text-4xl font-light">{{ props.price }}</p>
 		</div>
-		<div class="actions">
-			<div class="add-to-cart">
-				<button
-					class="flex items-center p-2 bg-white hover:bg-slate-200 active:bg-slate-400 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+		<div class="actions flex items-center">
+            <div class="quantity flex items-center mr-3">
+                <button type="button" class="rounded-full shadow-md w-7 h-7 hover:bg-rose-200 active:bg-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500" data-action="subtract" @click="changeProdQuantity">
+                    <font-awesome-icon class="text-base" icon="fa-solid fa-minus" />
+                </button>
+                <span class="mx-2">{{prodQuantity}}</span>
+                <button type="button" class="rounded-full shadow-md w-7 h-7 hover:bg-sky-200 active:bg-sky-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500" data-action="add" @click="changeProdQuantity">
+                    <font-awesome-icon class="text-base" icon="fa-solid fa-plus" />
+                </button>
+            </div>
+			<div class="add-to-cart ml-3 relative before:absolute before:-left-3 before:content-[''] before:w-px before:h-full before:bg-slate-200">
+				<button type="button"
+					class="flex items-center border-solid border-2 border-slate-400 rounded-lg p-2 bg-white hover:bg-slate-200 active:bg-slate-400 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
                     :data-product-id="props.id"
 				    @click="cartStore.addToCart"
                 >
