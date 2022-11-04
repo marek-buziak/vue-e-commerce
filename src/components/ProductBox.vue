@@ -11,6 +11,8 @@ const props = defineProps({
 	rating: Object,
 });
 
+// const productId: number = +props.id!;
+
 interface ArithmeticOperation {
     add: string;
     subtract: string;
@@ -21,17 +23,31 @@ const ARITHMETIC_OPERATION: ArithmeticOperation = {
     subtract: "subtract"
 }
 
-const prodQuantity = ref<number>(1);
 const cartStore = useCartStore();
+const prodQuantity = ref<number>(1);
+const prodButtonLabel = ref<string>("Add to cart");
+const prodButtonIcon = ref<string>("fa-solid fa-cart-plus");
+
+const updateProdButton = (): void => {
+    if (!prodQuantity.value && cartStore.isProductAlreadyInCart(props.id!)) {
+        prodButtonLabel.value = "Remove from cart";
+        prodButtonIcon.value = "fa-solid fa-trash";
+    } else if (prodQuantity.value && cartStore.isProductAlreadyInCart(props.id!) && prodQuantity.value !== cartStore.isProductAlreadyInCart(props.id!).id) {
+        prodButtonLabel.value = "Update qty";
+        prodButtonIcon.value = "fa-solid fa-pen";
+    }
+}
 
 const changeProdQuantity = (event: any) => {
     if (event.currentTarget.dataset.action === ARITHMETIC_OPERATION.add) {
-        return prodQuantity.value++;
+        prodQuantity.value++;
     }
     
     if (event.currentTarget.dataset.action === ARITHMETIC_OPERATION.subtract && prodQuantity.value) {
-        return prodQuantity.value--;
+        prodQuantity.value--;
     }
+
+    updateProdButton();
 }
 
 </script>
@@ -82,10 +98,11 @@ const changeProdQuantity = (event: any) => {
 				<button type="button"
 					class="flex items-center border-solid border-2 border-slate-400 rounded-lg p-2 bg-white hover:bg-slate-200 active:bg-slate-400 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
                     :data-product-id="props.id"
+                    :data-product-quantity="prodQuantity"
 				    @click="cartStore.addToCart"
                 >
-					<font-awesome-icon class="text-2xl" icon="fa-solid fa-cart-plus" />
-					<span class="text-sm ml-2">Add to cart</span>
+					<font-awesome-icon class="text-2xl" :icon="prodButtonIcon" />
+					<span class="text-sm leading-none ml-2">{{prodButtonLabel}}</span>
 				</button>
 			</div>
 		</div>

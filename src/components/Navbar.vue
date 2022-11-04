@@ -6,7 +6,7 @@ const cartStore = useCartStore();
 </script>
 
 <template>
-	<header class="mb-4 px-2 pt-2 sm:p-4 bg-sky-800">
+	<header class="mb-4 px-2 pt-2 sm:p-4 bg-sky-800 sticky top-0 z-10">
 		<nav>
 			<ul class="sm:flex items-center">
 				<li class="mb-4 sm:mb-0 sm:mr-6 lg:mr-10 text-white"><RouterLink class="inline-block w-full" to="/">Home</RouterLink></li>
