@@ -25,16 +25,25 @@ const ARITHMETIC_OPERATION: ArithmeticOperation = {
 
 const cartStore = useCartStore();
 const prodQuantity = ref<number>(1);
-const prodButtonLabel = ref<string>("Add to cart");
-const prodButtonIcon = ref<string>("fa-solid fa-cart-plus");
+const cartActionButtonLabel = ref<string>("Add to cart");
+const cartActionButtonIcon = ref<string>("fa-solid fa-cart-plus");
 
-const updateProdButton = (): void => {
-    if (!prodQuantity.value && cartStore.isProductAlreadyInCart(props.id!)) {
-        prodButtonLabel.value = "Remove from cart";
-        prodButtonIcon.value = "fa-solid fa-trash";
+const handleCartButtonAction = (event: any) => {
+    console.log("handleCartButtonAction fires");
+    cartStore.handleProductCartAction(+event.currentTarget.dataset.productId, +event.currentTarget.dataset.productQuantity);
+    updateCartActionButton();
+}
+
+const updateCartActionButton = (): void => {
+    if (!cartStore.isProductAlreadyInCart(props.id!)) {
+        cartActionButtonLabel.value = "Add to cart";
+        cartActionButtonIcon.value = "fa-solid fa-cart-plus";
+    } else if (!prodQuantity.value && cartStore.isProductAlreadyInCart(props.id!)) {
+        cartActionButtonLabel.value = "Remove from cart";
+        cartActionButtonIcon.value = "fa-solid fa-trash";
     } else if (prodQuantity.value && cartStore.isProductAlreadyInCart(props.id!) && prodQuantity.value !== cartStore.isProductAlreadyInCart(props.id!).id) {
-        prodButtonLabel.value = "Update qty";
-        prodButtonIcon.value = "fa-solid fa-pen";
+        cartActionButtonLabel.value = "Update qty";
+        cartActionButtonIcon.value = "fa-solid fa-pen";
     }
 }
 
@@ -47,7 +56,7 @@ const changeProdQuantity = (event: any) => {
         prodQuantity.value--;
     }
 
-    updateProdButton();
+    updateCartActionButton();
 }
 
 </script>
@@ -99,10 +108,10 @@ const changeProdQuantity = (event: any) => {
 					class="flex items-center border-solid border-2 border-slate-400 rounded-lg p-2 bg-white hover:bg-slate-200 active:bg-slate-400 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
                     :data-product-id="props.id"
                     :data-product-quantity="prodQuantity"
-				    @click="cartStore.addToCart"
+				    @click="handleCartButtonAction"
                 >
-					<font-awesome-icon class="text-2xl" :icon="prodButtonIcon" />
-					<span class="text-sm leading-none ml-2">{{prodButtonLabel}}</span>
+					<font-awesome-icon class="text-2xl" :icon="cartActionButtonIcon" />
+					<span class="text-sm leading-none ml-2">{{cartActionButtonLabel}}</span>
 				</button>
 			</div>
 		</div>

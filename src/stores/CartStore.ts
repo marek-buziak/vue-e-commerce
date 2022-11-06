@@ -22,14 +22,13 @@ export const useCartStore = defineStore("CartStore", {
     getters: {
         getCartTotalValue(state) {
             const cartTotalValue = state.cart.reduce<number>((previousQuantity: number, currentQuantity: CartProduct) => previousQuantity + currentQuantity.price, 0);
-            console.log("cartTotalValue:", cartTotalValue);
+            // console.log("cartTotalValue:", cartTotalValue);
             return cartTotalValue;
         },
         getCartItemsQuantity(state) {
             // return state.cart.length;
-            console.log("state.cart", state.cart);
             const cartItemsQuantity = state.cart.reduce<number>((previousQuantity: number, currentQuantity: CartProduct) => previousQuantity + currentQuantity.productCartQuantity, 0);
-            console.log("cartItemsQuantity:", cartItemsQuantity);
+            // console.log("cartItemsQuantity:", cartItemsQuantity);
             return cartItemsQuantity;
         },
         isProductAlreadyInCart(state) {
@@ -37,23 +36,28 @@ export const useCartStore = defineStore("CartStore", {
         }
     },
     actions: {
-        addToCart(event: any) {
-            console.log("Product id addToCart - CartStore:", event.currentTarget.dataset.productId);
-            const productIdToAdd: number = +event.currentTarget.dataset.productId;
-            const productCartQuantity: number = +event.currentTarget.dataset.productQuantity;
+        handleProductCartAction(prodId: number, prodQuantity: number) {
+            console.log("handleProductCartAction fires");
+            const productIdToMutate = prodId;
+            const productCartQuantity = prodQuantity;
             let productCartTotalValue: number; 
             // this.cart.push()
             const productsStore = useProductsStore();
             if (productsStore.getProductsData) {
                 const products = productsStore.getProductsData;
-                const productObjectToAdd: CartProduct = products.find(prod => productIdToAdd === prod.id);
-                const productAlreadyInCart: CartProduct = this.cart.find(prod => productIdToAdd === prod.id);
+                const productObjectToAdd: CartProduct = products.find(prod => productIdToMutate === prod.id);
+                const productAlreadyInCart: CartProduct = this.cart.find(prod => productIdToMutate === prod.id);
                 if (!productAlreadyInCart) {
-                    console.log("Product is not in cart - can be added!");
+                    // console.log("Product is not in cart - can be added!");
                     productCartTotalValue = productObjectToAdd.price * productCartQuantity;
                     this.cart.push({...productObjectToAdd, productCartQuantity, productCartTotalValue });
                 } else {
-                    console.log("Need to update existing product in cart!");
+                    // console.log("Need to update existing product in cart!");
+                    if (!productCartQuantity) {
+                        const updatedCart = this.cart.filter(prod => prod.id !== productIdToMutate);
+                        this.cart = [...updatedCart];
+                        // console.log("this.isProductAlreadyInCart:", this.isProductAlreadyInCart(productIdToMutate));
+                    }
                 }
             }
             console.log("this.cart:", this.cart);
