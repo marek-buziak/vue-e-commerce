@@ -21,9 +21,9 @@ export const useCartStore = defineStore("CartStore", {
     state: (): Cart => ({ cart: [] }),
     getters: {
         getCartTotalValue(state) {
-            const cartTotalValue = state.cart.reduce<number>((previousQuantity: number, currentQuantity: CartProduct) => previousQuantity + currentQuantity.price, 0);
-            // console.log("cartTotalValue:", cartTotalValue);
-            return cartTotalValue;
+            console.log("state - getCartTotalValue:", state)
+            const cartTotalValue = state.cart.reduce<number>((previousValue: number, currentValue: CartProduct) => previousValue + currentValue.productCartTotalValue, 0);
+            return (cartTotalValue).toFixed(2);
         },
         getCartItemsQuantity(state) {
             // return state.cart.length;
@@ -37,19 +37,16 @@ export const useCartStore = defineStore("CartStore", {
     },
     actions: {
         handleProductCartAction(prodId: number, prodQuantity: number) {
-            console.log("handleProductCartAction fires");
             const productIdToMutate = prodId;
             const productCartQuantity = prodQuantity;
-            let productCartTotalValue: number; 
-            // this.cart.push()
             const productsStore = useProductsStore();
             if (productsStore.getProductsData) {
                 const products = productsStore.getProductsData;
                 const productObjectToAdd: CartProduct = products.find(prod => productIdToMutate === prod.id);
                 const productAlreadyInCart: CartProduct = this.cart.find(prod => productIdToMutate === prod.id);
+                const productCartTotalValue: number = productObjectToAdd.price * productCartQuantity;
                 if (!productAlreadyInCart) {
                     // console.log("Product is not in cart - can be added!");
-                    productCartTotalValue = productObjectToAdd.price * productCartQuantity;
                     this.cart.push({...productObjectToAdd, productCartQuantity, productCartTotalValue });
                 } else {
                     // console.log("Need to update existing product in cart!");
@@ -57,6 +54,14 @@ export const useCartStore = defineStore("CartStore", {
                         const updatedCart = this.cart.filter(prod => prod.id !== productIdToMutate);
                         this.cart = [...updatedCart];
                         // console.log("this.isProductAlreadyInCart:", this.isProductAlreadyInCart(productIdToMutate));
+                    } else {
+                        const updatedCart = this.cart.map(prod => {
+                            if (prod.id === productIdToMutate) {
+                                return {...prod, productCartQuantity, productCartTotalValue};
+                            }
+                            return {...prod};
+                        });
+                        this.cart = [...updatedCart];
                     }
                 }
             }

@@ -14,9 +14,13 @@ const cartStore = useCartStore();
 				<li class="mb-4 sm:mb-0 sm:mr-6 lg:mr-10 text-white"><RouterLink class="inline-block w-full" to="/products">Products</RouterLink></li>
 				<li class="mb-4 sm:mb-0 text-white"><RouterLink class="inline-block w-full" to="/contact">Contact</RouterLink></li>
 				<li class="sm:ml-auto mb-4 sm:mb-0">
-                    <div class="cart flex items-center">
+                    <div class="cart flex items-center relative w-fit">
                         <font-awesome-icon class="text-2xl text-white" icon="fa-solid fa-cart-shopping" />
                         <span class="ml-2 text-3xl text-white font-light">{{cartStore.getCartItemsQuantity}}</span>
+                        <div class="price-total flex items-center absolute -bottom-3 left-1/2 -translate-x-1/2 border-t border-solid border-white">
+                            <font-awesome-icon icon="fa-solid fa-dollar-sign" class="text-white text-[10px]" />
+                            <span class="ml-1 text-xs text-white font-light">{{cartStore.getCartTotalValue}}</span>
+                        </div>
                     </div>
                 </li>
 			</ul>
