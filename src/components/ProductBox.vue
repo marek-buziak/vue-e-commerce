@@ -68,7 +68,7 @@ const changeProdQuantity = (event: any) => {
 		<div class="product-image flex justify-center h-56 w-56 mb-4">
 			<img
 				class="h-full object-contain rounded-3xl"
-				:src="props.image"
+				v-lazy="props.image"
 				:alt="props.title"
 			/>
 		</div>

@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
 import App from './App.vue'
+import VueLazyLoad from 'vue3-lazyload'
 import router from './router'
 import '@/assets/index.css'
 
@@ -20,6 +21,7 @@ library.add(faCartShopping, faCartPlus, faDollarSign, faMinus, faPlus, faPen, fa
 
 const app = createApp(App)
 
+app.use(VueLazyLoad, {})
 app.use(createPinia())
 app.use(router)
 
