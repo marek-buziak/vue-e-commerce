@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useCartStore } from "@/stores/CartStore";
 import { RouterLink } from "vue-router";
 import Cart from "@/components/Cart.vue";
@@ -12,9 +12,13 @@ const navCss = ref<string>("hidden");
 const cartCss = ref<string>("hidden");
 const ariaNavbarExpandedValue = ref<boolean>(false);
 
+const windowSize:number = (window.innerWidth);
+
+const cartAnimationInClasses = windowSize < 1024 ? "animate__animated animate__slideInLeft" : "animate__animated animate__slideInRight";
+const cartAnimationOutClasses = windowSize < 1024 ? "animate__animated animate__slideOutLeft" : "animate__animated animate__slideOutRight";
+
 const toggleMobileMenu = () => {
     let buttonIcon = "";
-    
     const navCssClass = navCss.value === "hidden" ? "animate__animated animate__slideInLeft" : "animate__animated animate__slideOutLeft";
     navCss.value = navCssClass;
     const buttonAriaExpandedState = navCssClass === "animate__animated animate__slideOutLeft" ? false : true;
@@ -24,33 +28,38 @@ const toggleMobileMenu = () => {
         buttonIcon = "fa-solid fa-bars";
     } else {
         buttonIcon = "fa-solid fa-xmark";
-        // headerCssClass = "h-screen";
         headerCss.value = "h-screen";
     }
     mobileMenuToggleButtonIcon.value = buttonIcon;
-    // headerCss.value = headerCssClass;
 };
 
 const ariaCartExpandedValue = ref<boolean>(false);
 const toggleCart = () => {
-    const state = ariaCartExpandedValue.value = ariaCartExpandedValue.value === false ? true : false;
+    const state = ariaCartExpandedValue.value === false ? true : false;
     ariaCartExpandedValue.value = state;
-    const cartCssClass = state ? "animate__animated animate__slideInLeft" : "animate__animated animate__slideOutLeft";
+    const cartCssClass = state ? cartAnimationInClasses : cartAnimationOutClasses;
     cartCss.value = cartCssClass;
 }
 
 const handleAnimationEnd = (event: any) => {
-    console.log("event.currentTarget:", event.currentTarget);
-    const cssClassToAdd = navCss.value.includes("animate__slideOutLeft") ? "hidden" : "";
-    navCss.value = cssClassToAdd;
-    if (event.currentTarget.id === "navbar" && cssClassToAdd === "hidden") {
-        headerCss.value = "";
+    let cssClassToAdd;
+    if (event.currentTarget.id === "navbar") {
+        cssClassToAdd = navCss.value.includes("animate__slideOutLeft") ? "hidden" : "";
+        navCss.value = cssClassToAdd;
+        if (cssClassToAdd === "hidden") {
+            headerCss.value = "";
+        }
+    } 
+    else if (event.currentTarget.id === "cart") {
+        cssClassToAdd = cartCss.value.includes("animate__slideOutLeft") || cartCss.value.includes("animate__slideOutRight") ? "hidden" : "";
+        cartCss.value = cssClassToAdd;
     }
+    
 };
 
 const closeCartCallback = (event: any) => {
-    console.log("Need to close the cart!");
-    cartCss.value = "animate__animated animate__slideOutLeft";
+    cartCss.value = cartAnimationOutClasses;
+    ariaCartExpandedValue.value = false;
 };
 
 </script>
@@ -62,12 +71,12 @@ const closeCartCallback = (event: any) => {
                 <font-awesome-icon class="text-2xl text-white" :icon="mobileMenuToggleButtonIcon" />
             </button>
         </div>
-		<nav id="navbar" class="mt-2 pt-2 border-t border-solid border-white lg:block lg:mt-0 lg:pt-0 lg:border-0" :class="navCss" @animationend="handleAnimationEnd">
-			<ul class="sm:flex items-center">
-				<li class="mb-4 sm:mb-0 sm:mr-6 lg:mr-10 text-white"><RouterLink class="inline-block w-full" to="/">Home</RouterLink></li>
-				<li class="mb-4 sm:mb-0 sm:mr-6 lg:mr-10 text-white"><RouterLink class="inline-block w-full" to="/about">About</RouterLink></li>
-				<li class="mb-4 sm:mb-0 sm:mr-6 lg:mr-10 text-white"><RouterLink class="inline-block w-full" to="/products">Products</RouterLink></li>
-				<li class="mb-4 sm:mb-0 text-white"><RouterLink class="inline-block w-full" to="/contact">Contact</RouterLink></li>
+		<nav id="navbar" class="mt-2 pt-2 md:pt-4 border-t border-solid border-white lg:block lg:mt-0 lg:pt-0 lg:border-0" :class="navCss" @animationend="handleAnimationEnd">
+			<ul class="lg:flex items-center">
+				<li class="mb-4 lg:mb-0 lg:mr-10 text-white"><RouterLink class="inline-block w-full" to="/">Home</RouterLink></li>
+				<li class="mb-4 lg:mb-0 lg:mr-10 text-white"><RouterLink class="inline-block w-full" to="/about">About</RouterLink></li>
+				<li class="mb-4 lg:mb-0 lg:mr-10 text-white"><RouterLink class="inline-block w-full" to="/products">Products</RouterLink></li>
+				<li class="mb-4 lg:mb-0 text-white"><RouterLink class="inline-block w-full" to="/contact">Contact</RouterLink></li>
 				<li class="sm:ml-auto mb-4 sm:mb-0">
                     <div class="cart flex items-center relative w-fit" aria-label="Toggle cart" tabindex="0" role="button" :aria-expanded="ariaCartExpandedValue" aria-controls="cart" @click="toggleCart">
                         <font-awesome-icon class="text-2xl text-white pointer-events-none" icon="fa-solid fa-cart-shopping" />
@@ -80,6 +89,6 @@ const closeCartCallback = (event: any) => {
                 </li>
 			</ul>
 		</nav>
-        <Cart id="cart" class="absolute top-0 left-0 w-full h-full" :class="cartCss" @animationend="handleAnimationEnd" @close-cart="closeCartCallback"/>
+        <Cart id="cart" :class="cartCss" @animationend="handleAnimationEnd" @close-cart="closeCartCallback"/>
 	</header>
 </template>

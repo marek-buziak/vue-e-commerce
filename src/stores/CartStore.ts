@@ -30,6 +30,9 @@ export const useCartStore = defineStore("CartStore", {
         },
         isProductAlreadyInCart(state) {
             return (productId: number) => state.cart.find((prod) => prod.id === productId);
+        },
+        productsInCart(state) {
+            return state.cart;
         }
     },
     actions: {
