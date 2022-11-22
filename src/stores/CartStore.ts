@@ -63,6 +63,19 @@ export const useCartStore = defineStore("CartStore", {
                 }
             }
             console.log("this.cart:", this.cart);
+        },
+        handleProductQuantityInCartUpdate(prodId: number, action: string) {
+            const updatedCart = this.cart.map(prod => {
+                if (prod.id === prodId) {
+                    let updatedProductCartQuantity: number = action === "add" ? prod.productCartQuantity + 1 : prod.productCartQuantity - 1;
+                    updatedProductCartQuantity = updatedProductCartQuantity < 0 ? 0 : updatedProductCartQuantity;
+                    const updatedProductCartTotalValue: number = updatedProductCartQuantity * prod.price;
+                    return {...prod, productCartQuantity: updatedProductCartQuantity, productCartTotalValue: updatedProductCartTotalValue};
+                }
+                return {...prod};
+            });
+            this.cart = [...updatedCart];
+            console.log("this.cart:", this.cart);
         }
     }
 });
