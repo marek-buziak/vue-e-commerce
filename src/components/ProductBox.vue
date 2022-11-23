@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useCartStore } from "@/stores/CartStore";
 const props = defineProps({
 	id: Number,
@@ -22,14 +22,24 @@ const ARITHMETIC_OPERATION: ArithmeticOperation = {
     add: "add",
     subtract: "subtract"
 }
+/* TO INSPECT
+onMounted(() => {
+    console.log("onMounted!");
+    console.log("props.id!:", props.id!);
+    const isProdInCart = cartStore.isProductAlreadyInCart(props.id!).productCartQuantity ? cartStore.isProductAlreadyInCart(props.id!).productCartQuantity : "prod not in cart";
+    console.log("isProdInCart:", isProdInCart);
+});
+*/
 
 const cartStore = useCartStore();
 const prodQuantity = ref<number>(1);
+// const isProdInCart = cartStore.isProductAlreadyInCart(props.id!).productCartQuantity;
+// console.log("isProdInCart:", isProdInCart);
+// const prodQuantityInCart = ref<number>(cartStore.isProductAlreadyInCart(props.id!).productCartQuantity ? cartStore.isProductAlreadyInCart(props.id!).productCartQuantity : 1);
 const cartActionButtonLabel = ref<string>("Add to cart");
 const cartActionButtonIcon = ref<string>("fa-solid fa-cart-plus");
 
 const handleCartButtonAction = (event: any) => {
-    console.log("handleCartButtonAction fires");
     cartStore.handleProductCartAction(+event.currentTarget.dataset.productId, +event.currentTarget.dataset.productQuantity);
     updateCartActionButton();
 }
@@ -41,7 +51,7 @@ const updateCartActionButton = (): void => {
     } else if (!prodQuantity.value && cartStore.isProductAlreadyInCart(props.id!)) {
         cartActionButtonLabel.value = "Remove from cart";
         cartActionButtonIcon.value = "fa-solid fa-trash";
-    } else if (prodQuantity.value && cartStore.isProductAlreadyInCart(props.id!) && prodQuantity.value !== cartStore.isProductAlreadyInCart(props.id!).id) {
+    } else if (prodQuantity.value && cartStore.isProductAlreadyInCart(props.id!) && prodQuantity.value !== cartStore.isProductAlreadyInCart(props.id!).productCartQuantity) {
         cartActionButtonLabel.value = "Update qty";
         cartActionButtonIcon.value = "fa-solid fa-pen";
     }
@@ -95,11 +105,11 @@ const changeProdQuantity = (event: any) => {
 		</div>
 		<div class="actions flex items-center">
             <div class="quantity flex items-center mr-3">
-                <button type="button" class="rounded-full shadow-md w-7 h-7 hover:bg-rose-200 active:bg-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500" data-action="subtract" @click="changeProdQuantity">
+                <button type="button" aria-label="Subtract from quantity" class="rounded-full shadow-md w-7 h-7 hover:bg-rose-200 active:bg-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500" data-action="subtract" @click="changeProdQuantity">
                     <font-awesome-icon class="text-base" icon="fa-solid fa-minus" />
                 </button>
                 <span class="mx-2">{{prodQuantity}}</span>
-                <button type="button" class="rounded-full shadow-md w-7 h-7 hover:bg-sky-200 active:bg-sky-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500" data-action="add" @click="changeProdQuantity">
+                <button type="button" aria-label="Add to quantity" class="rounded-full shadow-md w-7 h-7 hover:bg-sky-200 active:bg-sky-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500" data-action="add" @click="changeProdQuantity">
                     <font-awesome-icon class="text-base" icon="fa-solid fa-plus" />
                 </button>
             </div>
@@ -113,6 +123,7 @@ const changeProdQuantity = (event: any) => {
 					<font-awesome-icon class="text-2xl" :icon="cartActionButtonIcon" />
 					<span class="text-sm leading-none ml-2">{{cartActionButtonLabel}}</span>
 				</button>
+                <p class="flex items-center justify-center w-6 h-6 border border-solid border-slate-300 absolute top-[-12px] right-[-4px] rounded-full bg-white text-sm text-center font-light text-slate-600">1</p>
 			</div>
 		</div>
 	</div>

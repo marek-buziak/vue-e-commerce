@@ -31,18 +31,18 @@ const getProductsData: any = computed(() => {
 
 <style>
 
-    .product-box {
+    .products .product-box {
         width: 100%;
     }
 
     @media (min-width: 640px) {
-        .product-box {
+        .products .product-box {
             width: calc(100% / 2 - 1rem);
         }
     }
 
     @media (min-width: 1024px) {
-        .product-box {
+        .products .product-box {
             width: calc(100% / 3 - 1rem);
         }
     }

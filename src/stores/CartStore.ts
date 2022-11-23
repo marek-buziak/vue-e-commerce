@@ -68,7 +68,7 @@ export const useCartStore = defineStore("CartStore", {
             const updatedCart = this.cart.map(prod => {
                 if (prod.id === prodId) {
                     let updatedProductCartQuantity: number = action === "add" ? prod.productCartQuantity + 1 : prod.productCartQuantity - 1;
-                    updatedProductCartQuantity = updatedProductCartQuantity < 0 ? 0 : updatedProductCartQuantity;
+                    updatedProductCartQuantity = updatedProductCartQuantity < 1 ? 1 : updatedProductCartQuantity;
                     const updatedProductCartTotalValue: number = updatedProductCartQuantity * prod.price;
                     return {...prod, productCartQuantity: updatedProductCartQuantity, productCartTotalValue: updatedProductCartTotalValue};
                 }
@@ -76,6 +76,10 @@ export const useCartStore = defineStore("CartStore", {
             });
             this.cart = [...updatedCart];
             console.log("this.cart:", this.cart);
+        },
+        removeProductFromCart(prodId: number) {
+            const updatedCart = this.cart.filter(prod => prod.id !== prodId);
+            this.cart = [...updatedCart];
         }
     }
 });
