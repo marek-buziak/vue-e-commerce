@@ -62,7 +62,6 @@ export const useCartStore = defineStore("CartStore", {
                     }
                 }
             }
-            console.log("this.cart:", this.cart);
         },
         handleProductQuantityInCartUpdate(prodId: number, action: string) {
             const updatedCart = this.cart.map(prod => {
@@ -75,7 +74,6 @@ export const useCartStore = defineStore("CartStore", {
                 return {...prod};
             });
             this.cart = [...updatedCart];
-            console.log("this.cart:", this.cart);
         },
         removeProductFromCart(prodId: number) {
             const updatedCart = this.cart.filter(prod => prod.id !== prodId);

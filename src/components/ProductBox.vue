@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useCartStore } from "@/stores/CartStore";
 const props = defineProps({
 	id: Number,
@@ -22,20 +22,10 @@ const ARITHMETIC_OPERATION: ArithmeticOperation = {
     add: "add",
     subtract: "subtract"
 }
-/* TO INSPECT
-onMounted(() => {
-    console.log("onMounted!");
-    console.log("props.id!:", props.id!);
-    const isProdInCart = cartStore.isProductAlreadyInCart(props.id!).productCartQuantity ? cartStore.isProductAlreadyInCart(props.id!).productCartQuantity : "prod not in cart";
-    console.log("isProdInCart:", isProdInCart);
-});
-*/
 
 const cartStore = useCartStore();
 const prodQuantity = ref<number>(1);
-// const isProdInCart = cartStore.isProductAlreadyInCart(props.id!).productCartQuantity;
-// console.log("isProdInCart:", isProdInCart);
-// const prodQuantityInCart = ref<number>(cartStore.isProductAlreadyInCart(props.id!).productCartQuantity ? cartStore.isProductAlreadyInCart(props.id!).productCartQuantity : 1);
+const prodQuantityInCart = ref<number>(0);
 const cartActionButtonLabel = ref<string>("Add to cart");
 const cartActionButtonIcon = ref<string>("fa-solid fa-cart-plus");
 
@@ -68,6 +58,15 @@ const changeProdQuantity = (event: any) => {
 
     updateCartActionButton();
 }
+
+cartStore.$subscribe((_, state) => {
+    const productObject = state.cart.find(prod => prod.id === props.id);
+    if (productObject) {
+        prodQuantityInCart.value = productObject.productCartQuantity;
+    } else {
+        prodQuantityInCart.value = 0;
+    }
+});
 
 </script>
 
@@ -123,7 +122,7 @@ const changeProdQuantity = (event: any) => {
 					<font-awesome-icon class="text-2xl" :icon="cartActionButtonIcon" />
 					<span class="text-sm leading-none ml-2">{{cartActionButtonLabel}}</span>
 				</button>
-                <p class="flex items-center justify-center w-6 h-6 border border-solid border-slate-300 absolute top-[-12px] right-[-4px] rounded-full bg-white text-sm text-center font-light text-slate-600">1</p>
+                <p v-if="prodQuantityInCart" class="flex items-center justify-center w-6 h-6 border border-solid border-slate-300 absolute top-[-12px] right-[-4px] rounded-full bg-white text-sm text-center font-light text-slate-600">{{prodQuantityInCart}}</p>
 			</div>
 		</div>
 	</div>
