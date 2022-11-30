@@ -26,7 +26,6 @@
                 <font-awesome-icon class="text-2xl text-slate-600" icon="fa-solid fa-xmark" />
             </button>
         </div>
-
         <div v-if="cartStore.productsInCart.length" class="products-list">
             <div class="product-box flex mb-6 pb-2 border-b border-solid border-slate-200 sm:w-full" v-for="product in cartStore.productsInCart" :key="product.id">
                 <div class="product-image flex w-[20%] mr-2 relative">
@@ -82,9 +81,18 @@
                     </div>
                 </div>
             </div>
+            <div class="cart-summary">
+                <p class="text-xl text-slate-700 text-center font-semibold mb-2">Totals</p>
+                <p class="text-sm text-slate-700 text-center">Items: {{cartStore.getCartItemsQuantity}}</p>
+                <div class="flex justify-center items-center">
+                    <font-awesome-icon class="text-slate-700 text-sm mr-1 mb-0.5" icon="fa-solid fa-dollar-sign" />    
+                    <p class="text-sm text-slate-700">Sum: {{cartStore.getCartTotalValue}}</p>
+                </div>
+            </div>
         </div>
         <div v-else>
-            <p>Cart is empty</p>
+            <p class="text-xl text-slate-700 text-center font-semibold mb-2">Cart is empty!</p>
+            <p class="text-sm text-slate-700 text-center">Feel free to add here anything you like!</p>
         </div>
     </aside>
 </template>
